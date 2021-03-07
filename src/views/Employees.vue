@@ -112,12 +112,15 @@ export default {
     queryStr += 'p=' + p;
     if (this.uri.empId !== undefined) {
       queryStr += '&empId=' + this.uri.empId;
+      this.queryBox.empId = this.uri.empId;  // update queryBox
     }
     if (this.uri.name !== undefined) {
       queryStr += '&name=' + this.uri.name;
+      this.queryBox.name = this.uri.name;  // update queryBox
     }
     if (this.uri.title !== undefined) {
       queryStr += '&title=' + this.uri.title;
+      this.queryBox.title = this.uri.title;  // update queryBox
     }
     console.log('Fetching data from http://localhost:8080/api/employees' + queryStr);
 
@@ -141,6 +144,22 @@ export default {
   methods: {
     // search employee according to parameters in queryBox
     handleSearch() {
+      console.log('Search Criteria: empId=' + this.queryBox.empId + ', name=' + this.queryBox.name + ', title=' + this.queryBox.title)
+      if (this.queryBox.empId === '') {
+        console.log('1')
+      }
+      let queryStr = '?p=1';
+      if (this.queryBox.empId !== '') {
+        queryStr += '&empId=' + this.queryBox.empId;
+      }
+      if (this.queryBox.name !== '') {
+        queryStr += '&name=' + this.queryBox.name;
+      }
+      if (this.queryBox.title !== '') {
+        queryStr += '&title=' + this.queryBox.title;
+      }
+      this.$router.push('/employees' + queryStr)
+      this.reload();
     },
 
     // delete an employee
