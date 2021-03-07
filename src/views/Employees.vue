@@ -145,6 +145,40 @@ export default {
 
     // delete an employee
     handleDelete(index, row) {
+      console.log('index=' + index + ', employee Id for this guy is ' + row.empId);
+      const employId = row.empId;
+      const employName = row.name;
+      this.$confirm('This will permanently delete employee ' + employName + '. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        axios.delete('http://localhost:8080/api/employees/' + employId, {
+          headers: {'auth-token': this.$store.state.user.token}
+        })
+            .then(res => {
+              console.log(res.data)
+              this.$message({
+                type: 'success',
+                message: 'Delete completed'
+              });
+              this.reload()
+            })
+            .catch(err => {
+              console.log(err.response)
+              this.$message({
+                showClose: true,
+                message: err.response.data.error,
+                type: 'error'
+              });
+            })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        });
+      });
     },
 
     // edit an employee
