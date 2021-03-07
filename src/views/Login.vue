@@ -64,8 +64,10 @@ export default {
                   message: 'Login Success!',
                   type: 'success'
                 });
-                this.$store.commit('setToken', token);
-                this.$store.commit('setUsername', decodedUsername);
+                this.$store.commit('login', {
+                  'token': token,
+                  'username': decodedUsername
+                })
 
                 // redirect to employee list page
                 this.$router.push('/employees');
@@ -95,11 +97,6 @@ export default {
 <style scoped>
 @import "../assets/css/main.css";
 @import "../assets/css/color-dark.css";
-
-
-.el-form >>> .el-form-item__error {
-  color: black;
-}
 
 .login-wrap {
   position: relative;
