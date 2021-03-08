@@ -20,6 +20,20 @@ Vue.use(ElementUI, {
   locale
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.path === '/' || to.path === '/login' || to.path === '/404' || to.path === '/401') {
+    next();
+  } else {
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    if (userInfo.user.token === '') {
+      Vue.prototype.$message.warning('Please login first');
+      next({ path: '/login' });
+    } else {
+      next();
+    }
+  }
+});
+
 new Vue({
   router,
   store,
