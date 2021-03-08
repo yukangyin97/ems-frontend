@@ -133,7 +133,9 @@ export default {
               }, 400);
             }, 2000);
 
-            axios.post('http://localhost:8080/api/employees', this.employeeDetail)
+            axios.post('http://localhost:8080/api/employees', this.employeeDetail, {
+              headers: {'auth-token': this.$store.state.user.token}
+            })
             .then(res => {
               console.log(res)
               this.loading = false;

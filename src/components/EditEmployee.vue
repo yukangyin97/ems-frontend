@@ -137,7 +137,9 @@ export default {
               }, 400);
             }, 2000);
 
-            axios.put('http://localhost:8080/api/employees', this.employeeDetail)
+            axios.put('http://localhost:8080/api/employees', this.employeeDetail, {
+              headers: {'auth-token': this.$store.state.user.token}
+            })
                 .then(res => {
                   console.log(res)
                   this.loading = false;
@@ -171,7 +173,9 @@ export default {
   },
   created() {
     console.log('Employee Id=' + this.employeeId)
-    axios.get('http://localhost:8080/api/employees/' + this.employeeId)
+    axios.get('http://localhost:8080/api/employees/' + this.employeeId, {
+      headers: {'auth-token': this.$store.state.user.token}
+    })
     .then(res => {
       console.log(res.data)
       this.employeeDetail.empId = res.data.empId;
