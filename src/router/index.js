@@ -5,6 +5,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'Login',
+    component: () => import('@/views/Login')
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/Login')
@@ -15,9 +20,14 @@ const routes = [
     component: () => import('@/views/Employees')
   },
   {
-    path: '/employeeDetail',
-    name: 'EmployeeDetail',
-    component: () => import('@/components/AddEmployee')
+    path: '/404',
+    name: 'Page404',
+    component: () => import('@/views/error-page/404')
+  },
+  // 404 page must be placed at the end !!!
+  {
+    path: '*',
+    redirect: '/404',
   }
 ]
 
