@@ -56,17 +56,23 @@
         ></el-pagination>
       </div>
     </div>
+
+    <add-employee :visible.sync="addEmployeeTableVisible"
+                     @cancelForm="addEmployeeTableVisible = !addEmployeeTableVisible"></add-employee>
+
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import vHead from '@/components/Header.vue';
+import AddEmployee from "@/components/AddEmployee";
 
 export default {
   inject: ['reload'],
   name: "Employees",
   components: {
+    AddEmployee,
     vHead,
   },
   data() {
@@ -85,8 +91,7 @@ export default {
         name: '',
         title: '',
       },
-
-
+      addEmployeeTableVisible: false,
       totalEmployeeAmount: 0,
       employeeData: [],
     };
@@ -145,9 +150,6 @@ export default {
     // search employee according to parameters in queryBox
     handleSearch() {
       console.log('Search Criteria: empId=' + this.queryBox.empId + ', name=' + this.queryBox.name + ', title=' + this.queryBox.title)
-      if (this.queryBox.empId === '') {
-        console.log('1')
-      }
       let queryStr = '?p=1';
       if (this.queryBox.empId !== '') {
         queryStr += '&empId=' + this.queryBox.empId;
@@ -206,7 +208,7 @@ export default {
 
     // add a new employee
     handleAddNewEmployee() {
-
+      this.addEmployeeTableVisible = !this.addEmployeeTableVisible;
     },
 
     // Page Navigation
