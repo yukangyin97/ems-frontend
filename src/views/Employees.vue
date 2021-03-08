@@ -60,6 +60,12 @@
     <add-employee :visible.sync="addEmployeeTableVisible"
                      @cancelForm="addEmployeeTableVisible = !addEmployeeTableVisible"></add-employee>
 
+    <div v-if="editEmployeeTableVisible">
+      <edit-employee :visible.sync="editEmployeeTableVisible" :employee-id.sync="editedEmployeeId"
+                     @cancelForm="editEmployeeTableVisible = !editEmployeeTableVisible"></edit-employee>
+    </div>
+
+
   </div>
 </template>
 
@@ -67,12 +73,14 @@
 import axios from "axios";
 import vHead from '@/components/Header.vue';
 import AddEmployee from "@/components/AddEmployee";
+import EditEmployee from "@/components/EditEmployee";
 
 export default {
   inject: ['reload'],
   name: "Employees",
   components: {
     AddEmployee,
+    EditEmployee,
     vHead,
   },
   data() {
@@ -91,7 +99,9 @@ export default {
         name: '',
         title: '',
       },
+      editedEmployeeId: '',
       addEmployeeTableVisible: false,
+      editEmployeeTableVisible: false,
       totalEmployeeAmount: 0,
       employeeData: [],
     };
@@ -204,6 +214,8 @@ export default {
 
     // edit an employee
     handleEdit(index, row) {
+      this.editedEmployeeId = row.empId;
+      this.editEmployeeTableVisible = !this.editEmployeeTableVisible;
     },
 
     // add a new employee

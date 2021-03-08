@@ -1,18 +1,18 @@
 <template>
   <el-drawer
-      title="Add an Employee"
-      :with-header="addEmployeeDrawerProp.withHeader"
+      title="Edit an Employee"
+      :with-header="editEmployeeDrawerProp.withHeader"
       size="25%"
-      :append-to-body="addEmployeeDrawerProp.appendToBody"
+      :append-to-body="editEmployeeDrawerProp.appendToBody"
       :visible.sync="visible"
-      :direction="addEmployeeDrawerProp.direction"
-      :modal="addEmployeeDrawerProp.model"
+      :direction="editEmployeeDrawerProp.direction"
+      :modal="editEmployeeDrawerProp.model"
       :before-close="cancelForm">
     <div class="demo-drawer__content">
 
       <el-card shadow="hover" style="height:1000px;">
         <div slot="header" class="clearfix" style="text-align: left">
-          <a style="font-size: large;color: #20a0ff">Add an Employee</a>
+          <a style="font-size: large;color: #20a0ff">Edit an Employee</a>
           <el-button-group style="float: right">
             <el-button type="danger" @click.native="$emit('cancelForm')" style="width: 80px">Cancel
             </el-button>
@@ -25,7 +25,7 @@
         <el-form ref="employeeDetail" :model="employeeDetail" :rules="employeeDetailRules"
                  style="margin-top: 5%;" label-width="auto" :label-position="labelPosition">
           <el-form-item label="Employee Id :" prop="empId" style="margin-top: 5%;width: 85%">
-            <el-input v-model="employeeDetail.empId"></el-input>
+            <el-input v-model="employeeDetail.empId" readonly></el-input>
           </el-form-item>
 
           <el-form-item label="Employee Name :" prop="name" style="margin-top: 5%;width: 85%">
@@ -59,16 +59,20 @@ import axios from "axios";
 
 export default {
   inject: ['reload'],
-  name: 'EmployeeDetail',
+  name: 'EditEmployee',
   props: {
     visible: {
       default: false,
       type: Boolean,
+    },
+    employeeId: {
+      default: '',
+      type: String
     }
   },
   data() {
     return {
-      addEmployeeDrawerProp: {
+      editEmployeeDrawerProp: {
         direction: 'rtl',
         withHeader: false,
         appendToBody: true,
@@ -118,7 +122,7 @@ export default {
       if (this.loading) {
         return;
       }
-      this.$confirm('Confirm Add？', {
+      this.$confirm('Confirm Edit？', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning',
@@ -133,39 +137,53 @@ export default {
               }, 400);
             }, 2000);
 
-            axios.post('http://localhost:8080/api/employees', this.employeeDetail)
-            .then(res => {
-              console.log(res)
-              this.loading = false;
-              // this.addEmployeeDrawerProp.editDrawVisible = false;
-              this.visible = false;
-              this.reload()
-              clearTimeout(this.timer);
-              this.$message({
-                message: 'Employee Add Success!',
-                type: 'success'
-              })
-            })
-            .catch(err => {
-              console.log(err.response)
-              this.loading = false;
-              // this.addEmployeeDrawerProp.editDrawVisible = false;
-              this.visible = false;
-              this.reload()
-              clearTimeout(this.timer);
-              this.$message({
-                message: err.response.data.error,
-                type: 'error'
-              })
-            });
+            axios.put('http://localhost:8080/api/employees', this.employeeDetail)
+                .then(res => {
+                  console.log(res)
+                  this.loading = false;
+                  this.visible = false;
+                  this.reload()
+                  clearTimeout(this.timer);
+                  this.$message({
+                    message: 'Employee Edit Success!',
+                    type: 'success'
+                  })
+                })
+                .catch(err => {
+                  console.log(err.response)
+                  this.loading = false;
+                  this.visible = false;
+                  this.reload()
+                  clearTimeout(this.timer);
+                  this.$message({
+                    message: err.response.data.error,
+                    type: 'error'
+                  })
+                });
           })
           .catch(_ => {
             this.$message({
               type: 'info',
-              message: 'Adding Employee Canceled'
+              message: 'Editing Employee Canceled'
             });
           });
     },
+  },
+  created() {
+    console.log('Employee Id=' + this.employeeId)
+    axios.get('http://localhost:8080/api/employees/' + this.employeeId)
+    .then(res => {
+      console.log(res.data)
+      this.employeeDetail.empId = res.data.empId;
+      this.employeeDetail.name = res.data.name;
+      this.employeeDetail.surname = res.data.surname;
+      this.employeeDetail.phoneNumber = res.data.phoneNumber;
+      this.employeeDetail.title = res.data.title;
+      this.employeeDetail.address = res.data.address;
+    })
+    .catch(err => {
+      console.log(err.response.data.error)
+    })
   }
 };
 </script>
