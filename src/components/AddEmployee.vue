@@ -2,7 +2,7 @@
   <el-drawer
       title="Add an Employee"
       :with-header="addEmployeeDrawerProp.withHeader"
-      size="25%"
+      size="30%"
       :append-to-body="addEmployeeDrawerProp.appendToBody"
       :visible.sync="visible"
       :direction="addEmployeeDrawerProp.direction"
